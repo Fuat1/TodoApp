@@ -38,7 +38,7 @@ services:
     networks:
       - todoapp_network 
     volumes:
-      - ./todoapp:/usr/src/app
+      - ./frontend:/usr/src/app
       - '/usr/src/app/node_modules'
 volumes:
   postgres_data:
