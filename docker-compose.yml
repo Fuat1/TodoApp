@@ -1,0 +1,48 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:latest
+    container_name: my_postgres
+    environment:
+      POSTGRES_USER: fuat
+      POSTGRES_PASSWORD: default123
+      POSTGRES_DB: todoapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - todoapp_network
+
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    networks:
+      - todoapp_network
+
+  todoapp:
+    container_name: todoapp
+    hostname: todoapp
+    build:
+      context: ./todoapp
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - todoapp_network 
+    volumes:
+      - ./todoapp:/usr/src/app
+      - '/usr/src/app/node_modules'
+volumes:
+  postgres_data:
+
+networks:
+  todoapp_network:
+    driver: bridge
