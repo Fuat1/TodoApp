@@ -3,14 +3,21 @@ import axios from "axios";
 
 const TodoForm = ({ onTaskAdded }) => {
   const [task, setTask] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleTaskChange = (e) => {
     setTask(e.target.value);
+    setErrorMessage("");
   };
 
   const handleAddTask = async () => {
+    if (!task.trim()) {
+      setErrorMessage("Task title cannot be empty.");
+      return;
+    }
+
     try {
-      const response = await axios.post("http://localhost:3001/api/todos", {
+      const response = await axios.post("/api/todos", {
         title: task,
       });
       console.log("New task created:", response.data);
@@ -34,6 +41,7 @@ const TodoForm = ({ onTaskAdded }) => {
         onChange={handleTaskChange}
         className="w-full p-2 rounded shadow-md bg-slate-600"
       />
+      <p className="text-red-600">{errorMessage}</p>
       <button
         onClick={handleAddTask}
         className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"

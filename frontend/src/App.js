@@ -5,6 +5,7 @@ import axios from "axios";
 
 function App() {
   const [tasks, setTasks] = useState([]);
+  axios.defaults.baseURL = "http://localhost:3001";
 
   const fetchTasks = () => {
     axios

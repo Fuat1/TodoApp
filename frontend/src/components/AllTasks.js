@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-axios.defaults.baseURL = "http://localhost:3001";
 
 const AllTasks = (props) => {
   const [editTask, setEditTask] = useState(null);
@@ -12,6 +11,11 @@ const AllTasks = (props) => {
     const sorted = [...props.tasks].sort((a, b) => a.id - b.id);
     setSortedTasks(sorted);
   }, [props.tasks]);
+
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString();
+  };
 
   const handleSort = () => {
     const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
@@ -35,7 +39,9 @@ const AllTasks = (props) => {
       setEditTask(null);
       setEditedTaskTitle("");
       const updatedSortedTasks = sortedTasks.map((t) =>
-        t.id === task.id ? { ...t, title: editedTaskTitle } : t
+        t.id === task.id
+          ? { ...t, title: editedTaskTitle, updatedAt: Date.now() }
+          : t
       );
       setSortedTasks(updatedSortedTasks);
     } catch (error) {
@@ -95,8 +101,12 @@ const AllTasks = (props) => {
                     task.title
                   )}
                 </td>
-                <td className="border border-gray-600 p-2">{task.createdAt}</td>
-                <td className="border border-gray-600 p-2">{task.updatedAt}</td>
+                <td className="border border-gray-600 p-2">
+                  {formatTimestamp(task.createdAt)}
+                </td>
+                <td className="border border-gray-600 p-2">
+                  {formatTimestamp(task.updatedAt)}
+                </td>
                 <td className="border border-gray-600 p-2">
                   {editTask === task.id ? (
                     <button

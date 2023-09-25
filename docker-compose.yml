@@ -25,11 +25,11 @@ services:
     networks:
       - todoapp_network
 
-  todoapp:
+  frontend:
     container_name: todoapp
     hostname: todoapp
     build:
-      context: ./todoapp
+      context: ./frontend
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
